@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#f59e34</color>
+
+    <color name="colorPrimaryDark">#f59e34</color>
+
+    <color name="colorAccent">#df7858</color>
+
+    <color name="back">#303030</color>
+
+    <color name="back_dark">#212121</color>
+
+    <color name="black_bg">#424242</color>
+
+    <color name="black_bg_dark">#212121</color>
+
+    <color name="yellow">#ffb300</color>
+
+    <color name="red">#E53935</color>
+
+    <color name="red_light">#ff5252</color>
+
+    <color name="red_dark">#b73a3a</color><!--b71234-->
+
+    <color name="red_button">#d10e0d</color><!--b71234-->
+
+    <color name="primary_text">#212121</color>
+
+    <color name="secondary_text">#727272</color>
+
+    <color name="swipe_red">#E53935</color>
+
+    <color name="green">#8bc34a</color>8bc34a
+
+    <color name="green_dark">#68A035</color>
+
+    <color name="blue">#0197A6</color>
+
+    <color name="grey">#78909c</color>
+
+    <color name="grey_dark">#556770</color>
+
+    <color name="divider">#979797</color>
+
+    <color name="text_black">#4a4a4a</color>
+
+    <color name="text_grey">#9b9b9b</color>
+
+    <color name="err_orange">#e65100</color>
+
+    <color name="companion_login_hint">#90ffffff</color>
+
+    <color name="text_green">#00c96a</color>
+
+    <color name="trans_black">#33000000</color>
+
+    <color name="grey_line">#4a4a4a</color>
+
+
+    <color name="transparent">#00000000</color>
+
+    <color name="transparent_black">#66000000</color>
+
+    <color name="transparent_black_80">#BF000000</color>
+
+    <color name="transparent_black_50">#80000000</color>
+
+    <color name="transparent_black_25">#40000000</color>
+
+
+    <color name="white">#FFFFFF</color>
+
+    <color name="white_transparent_80">#BFFFFFFF</color>
+
+    <color name="white_transparent_50">#80FFFFFF</color>
+
+    <color name="white_transparent_25">#40FFFFFF</color>
+
+    <color name="black_dialog">#424242</color>
+
+    <color name="turquoise">#00BFA5</color>
+
+    <color name="grey_text">#acacac</color>
+
+    <color name="btn_red">#FF5252</color>
+
+
+</resources>
