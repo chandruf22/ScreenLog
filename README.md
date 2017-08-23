@@ -1,3 +1,3 @@
 # ScreenLog
 
-[![Alt text](https://img.youtube.com/vi/VID/0.jpg)](https://youtu.be/gTnheNbs9UU)
+[![screencapture 1503472125156](https://i.ytimg.com/vi/gTnheNbs9UU/hqdefault.jpg)](https://www.youtube.com/embed/gTnheNbs9UU?autoplay=1 "screencapture 1503472125156")
