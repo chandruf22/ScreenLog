@@ -109,6 +109,7 @@ public class ScreenshotService extends Service {
     void processImage(final byte[] png) {
 
 
+
         new Thread() {
             @Override
             public void run() {
