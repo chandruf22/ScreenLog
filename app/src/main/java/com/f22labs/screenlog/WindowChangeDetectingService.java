@@ -2,10 +2,15 @@ package com.f22labs.screenlog;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.IntDef;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +19,23 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.RemoteViews;
 
 public class WindowChangeDetectingService extends AccessibilityService {
+
+
+    private int resultCode;
+    private Intent resultData;
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+
+        resultCode = intent.getIntExtra(Constants.INTENT_KEY.SCREENSHOT, 1337);
+        resultData = intent.getParcelableExtra(Constants.INTENT_KEY.SCREENSHOT_DATA);
+
+
+        return START_STICKY;
+
+    }
 
     @Override
     protected void onServiceConnected() {
@@ -89,12 +111,19 @@ public class WindowChangeDetectingService extends AccessibilityService {
 //        remoteViewsExpand.setOnClickPendingIntent(R.id.txt_action_button, bannerSingleTypeAction);
 
 
-//        Intent closeIntent = new Intent(this, RichMediaNotificationService.class);
-//        closeIntent.setAction(Constants.ACTION.STOP_BANNER_NOTIFICATION_SERVICE);
-//        PendingIntent pcloseIntent = PendingIntent.getService(this, 0,
-//                closeIntent, 0);
+        Intent screenshotIntent = new Intent(this, ScreenshotService.class);
+        screenshotIntent.putExtra(Constants.INTENT_KEY.SCREENSHOT, resultCode);
+        screenshotIntent.putExtra(Constants.INTENT_KEY.SCREENSHOT_DATA, resultData);
+        screenshotIntent.putExtra(Constants.INTENT_KEY.PACKAGE, packageName);
+        screenshotIntent.putExtra(Constants.INTENT_KEY.ACTIVITY_NAME, activityName);
 
-//        remoteViewsCollapse.setOnClickPendingIntent(R.id.img_noti_close, pcloseIntent);
+
+        screenshotIntent.setData(Uri.parse(screenshotIntent.toUri(Intent.URI_INTENT_SCHEME)));
+
+        PendingIntent screenshotPendingIntent = PendingIntent.getService(this, 0,
+                screenshotIntent, 0);
+
+        remoteViewsExpand.setOnClickPendingIntent(R.id.img_screen_capture, screenshotPendingIntent);
 
         remoteViewsCollapse.setTextViewText(R.id.txt_noti_title, Utils.getAppNameFromPackage(this,packageName));
         remoteViewsCollapse.setTextViewText(R.id.txt_noti_activity_name, activityName);

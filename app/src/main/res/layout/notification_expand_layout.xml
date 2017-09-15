@@ -6,12 +6,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:gravity="center"
-        android:padding="10dp">
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:orientation="horizontal">
 
 
         <ImageView
@@ -22,8 +23,9 @@
             android:layout_centerVertical="true" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/img_noti_icon_small"
@@ -68,9 +70,15 @@
             </LinearLayout>
 
 
+            <ImageView
+                android:id="@+id/img_screen_capture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_camera"/>
+
 
 
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>
 

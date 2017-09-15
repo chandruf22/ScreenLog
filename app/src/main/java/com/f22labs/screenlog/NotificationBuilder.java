@@ -250,6 +250,10 @@ public class NotificationBuilder {
 //    }
 
 
+    public static void closeNotificationBar(Context context) {
+        Intent intent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        context.sendBroadcast(intent);
+    }
 
 
 
