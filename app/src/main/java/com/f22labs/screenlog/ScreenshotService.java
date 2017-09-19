@@ -1,7 +1,5 @@
 package com.f22labs.screenlog;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.display.DisplayManager;
@@ -16,10 +14,13 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.RemoteViews;
+
+import com.f22labs.screenlog.screenshot.ImageTransmogrifier;
+import com.f22labs.screenlog.storage.Storage;
+import com.f22labs.screenlog.utils.Constants;
+import com.f22labs.screenlog.utils.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +31,7 @@ public class ScreenshotService extends Service {
     static final int VIRT_DISPLAY_FLAGS =
             DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY |
                     DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC;
+
     private MediaProjection projection;
     private VirtualDisplay vdisplay;
     final private HandlerThread handlerThread =
@@ -50,12 +52,19 @@ public class ScreenshotService extends Service {
     private String activityName;
 
 
+    private Storage storage;
+
+
+    private long currentMillis = System.currentTimeMillis();
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         mgr = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
         wmgr = (WindowManager) getSystemService(WINDOW_SERVICE);
+
+        storage = new Storage(getApplicationContext());
 
         handlerThread.start();
         handler = new Handler(handlerThread.getLooper());
@@ -73,7 +82,13 @@ public class ScreenshotService extends Service {
 
         NotificationBuilder.closeNotificationBar(this);
 
-        startCapture();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startCapture();
+            }
+        },1000);
         return (START_NOT_STICKY);
     }
 
@@ -96,18 +111,15 @@ public class ScreenshotService extends Service {
         throw new IllegalStateException("Binding not supported. Go away.");
     }
 
-    WindowManager getWindowManager() {
+    public WindowManager getWindowManager() {
         return (wmgr);
     }
 
-    Handler getHandler() {
+    public Handler getHandler() {
         return (handler);
     }
 
-
-
-    void processImage(final byte[] png) {
-
+    public void processImage(final byte[] png) {
 
 
         new Thread() {
@@ -115,13 +127,21 @@ public class ScreenshotService extends Service {
             public void run() {
 
 
-                FileUtils.createOrExistsDir(new File(Environment.getExternalStorageDirectory()+"/ScreenLogs"));
-
-                File output = new File(Environment.getExternalStorageDirectory()+"/ScreenLogs/"
-                        ,Utils.getAppNameFromPackage(ScreenshotService.this,packageName)
-                        +"-"+activityName+"-"+System.currentTimeMillis()+".png");
 
                 try {
+
+
+                    storage.createDirectory(storage.getExternalStorageDirectory()+File.separator+Constants.FILE.FOLDER_SCREENSHOTS);
+
+
+//                    File output = new File(storage.getExternalStorageDirectory()+File.separator+Constants.FILE.FOLDER_SCREENSHOTS
+//                            +File.separator
+//
+//                            , Utils.getAppNameFromPackage(ScreenshotService.this,packageName)
+//                            +Constants.FILE.DELIMITER+activityName+Constants.FILE.DELIMITER+currentMillis+Constants.FILE.PNG);
+
+                    File output =  storage.buildScreenShotsFileName(ScreenshotService.this, packageName,activityName,currentMillis);
+
                     FileOutputStream fos = new FileOutputStream(output);
 
                     fos.write(png);
@@ -139,6 +159,7 @@ public class ScreenshotService extends Service {
                 }
             }
         }.start();
+
 
         beeper.startTone(ToneGenerator.TONE_PROP_ACK);
         stopCapture();

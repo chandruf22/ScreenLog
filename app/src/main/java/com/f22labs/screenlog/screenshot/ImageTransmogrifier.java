@@ -1,4 +1,4 @@
-package com.f22labs.screenlog;
+package com.f22labs.screenlog.screenshot;
 
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
@@ -7,6 +7,8 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.view.Display;
 import android.view.Surface;
+
+import com.f22labs.screenlog.ScreenshotService;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -18,7 +20,7 @@ public class ImageTransmogrifier implements ImageReader.OnImageAvailableListener
   private final ScreenshotService svc;
   private Bitmap latestBitmap=null;
 
-  ImageTransmogrifier(ScreenshotService svc) {
+  public ImageTransmogrifier(ScreenshotService svc) {
     this.svc=svc;
 
     Display display=svc.getWindowManager().getDefaultDisplay();
@@ -83,15 +85,15 @@ public class ImageTransmogrifier implements ImageReader.OnImageAvailableListener
     }
   }
 
-  Surface getSurface() {
+  public Surface getSurface() {
     return(imageReader.getSurface());
   }
 
-  int getWidth() {
+  public int getWidth() {
     return(width);
   }
 
-  int getHeight() {
+  public int getHeight() {
     return(height);
   }
 

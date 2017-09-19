@@ -1,4 +1,4 @@
-package com.f22labs.screenlog;
+package com.f22labs.screenlog.utils;
 
 /**
  * Created by f22labs on 18/08/17.
@@ -24,10 +24,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.provider.ContactsContract;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -38,11 +40,15 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.bumptech.glide.Glide;
+import com.f22labs.screenlog.R;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -333,5 +339,27 @@ import static android.content.Context.CLIPBOARD_SERVICE;
 
             Toast.makeText(context,message,Toast.LENGTH_LONG).show();
         }
+
+
+        public static void loadImage(Context context, String url, ImageView imageView) {
+
+            Glide.with(context).load(url).dontAnimate().placeholder(R.drawable.placeholder).into(imageView);
+        }
+
+        public static void loadImage(Context context, Uri url, ImageView imageView) {
+
+            Glide.with(context).load(url).dontAnimate().placeholder(R.drawable.placeholder).into(imageView);
+        }
+
+        public static void loadImage(Context context, String url, ImageView imageView, int drawable) {
+
+            if (!TextUtils.isEmpty(url)) {
+                Glide.with(context).load(url).dontAnimate().placeholder(drawable).into(imageView);
+            } else {
+                imageView.setImageDrawable(ContextCompat.getDrawable(context, drawable));
+            }
+        }
+
+
     }
 

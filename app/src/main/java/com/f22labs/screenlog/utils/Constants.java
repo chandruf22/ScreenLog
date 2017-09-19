@@ -1,4 +1,6 @@
-package com.f22labs.screenlog;
+package com.f22labs.screenlog.utils;
+
+import com.f22labs.screenlog.BuildConfig;
 
 /**
  * Created by Chandru on 14/09/17.
@@ -33,6 +35,27 @@ public class Constants {
 
         int FAILURE = 2;
 
+
+
+    }
+
+
+    public interface FILE {
+
+
+        String FOLDER_SCREENSHOTS = "ScreenLogs";
+
+        String DELIMITER = "-";
+
+        String PNG = ".png";
+
+
+    }
+
+    public interface SHARED_PREFS {
+
+
+        String IS_SCREENSHOT_PERMISSION_ENABLED = BuildConfig.APPLICATION_ID + ".SHARED_PREFS"+ "IS_SCREENSHOT_PERMISSION_ENABLED";
 
 
     }
