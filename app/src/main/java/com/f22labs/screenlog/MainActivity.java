@@ -1,10 +1,11 @@
 package com.f22labs.screenlog;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.Intent;
 import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,21 +14,28 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
+import com.f22labs.screenlog.models.AccessbilityCheckEvent;
 import com.f22labs.screenlog.storage.Storage;
 import com.f22labs.screenlog.utils.Constants;
 import com.f22labs.screenlog.utils.SharedPrefsUtils;
 import com.f22labs.screenlog.utils.Utils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * Created by f22labs on 18/08/17.
  */
 
+@RuntimePermissions
 public class MainActivity extends AppCompatActivity {
 
 
@@ -82,63 +90,74 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(!Utils.isAccessibilityEnabled(this,getPackageName()+"/.WindowChangeDetectingService")){
-            Utils.openAccessibilitySettings(this);
+            Utils.openAccessibilitySettings(this, Constants.RESULT_CODE.ACCESSIBILITY_SERVICE);
             Utils.showToastLong(getApplicationContext(),"Please enable accessibility service access to ScreenLog");
+
         }else{
 
-            setAdapter();
+            MainActivityPermissionsDispatcher.onWriteStoragePermissionEnabledWithCheck(this);
+
 
         }
 
 
 
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK) {
+
+            if (requestCode == Constants.RESULT_CODE.ACCESSIBILITY_SERVICE) {
+
+                MainActivityPermissionsDispatcher.onWriteStoragePermissionEnabledWithCheck(this);
+
+
+            }else  if (requestCode == Constants.RESULT_CODE.SCREENSHOT){
+
+                startAccessibilityService(resultCode, data);
+
+            }
+
+
+
+        }else if (resultCode == RESULT_CANCELED) {
+
+
+            if (requestCode == Constants.RESULT_CODE.SCREENSHOT){
+
+
+                finish();
+            }
+
+
+        }
+
+
+
+    }
+
+    private void startAccessibilityService(int resultCode, Intent data) {
+        Intent intent = new Intent(this, WindowChangeDetectingService.class);
+        intent.putExtra(Constants.INTENT_KEY.SCREENSHOT, resultCode);
+        intent.putExtra(Constants.INTENT_KEY.SCREENSHOT_DATA, data);
+        startService(intent);
+    }
+
+    private void startScreenCapture() {
+        mgr = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
+
+        startActivityForResult(mgr.createScreenCaptureIntent(),
+                Constants.RESULT_CODE.SCREENSHOT);
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        boolean isScreenShotPermissionEnabled = SharedPrefsUtils.getBoolean(Constants.SHARED_PREFS.IS_SCREENSHOT_PERMISSION_ENABLED, false, this);
-
-        if(Utils.isAccessibilityEnabled(this,getPackageName()+"/.WindowChangeDetectingService") && !isScreenShotPermissionEnabled) {
-
-
-                mgr = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
-
-                startActivityForResult(mgr.createScreenCaptureIntent(),
-                        Constants.RESULT_CODE.SCREENSHOT);
-
-        }else{
-
-
-        }
-
-    }
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == Constants.RESULT_CODE.SCREENSHOT) {
-
-            SharedPrefsUtils.putBoolean(Constants.SHARED_PREFS.IS_SCREENSHOT_PERMISSION_ENABLED,true, this);
-
-            if (resultCode == RESULT_OK) {
-
-                Intent intent = new Intent(this, WindowChangeDetectingService.class);
-                intent.putExtra(Constants.INTENT_KEY.SCREENSHOT, resultCode);
-                intent.putExtra(Constants.INTENT_KEY.SCREENSHOT_DATA, data);
-                startService(intent);
-
-                setAdapter();
-
-            }
-        }
-
-
 
     }
 
@@ -198,10 +217,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
 
     @Override
@@ -216,4 +231,59 @@ public class MainActivity extends AppCompatActivity {
         SharedPrefsUtils.putBoolean(Constants.SHARED_PREFS.IS_SCREENSHOT_PERMISSION_ENABLED,false, this);
 
     }
+
+    @NeedsPermission({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void onWriteStoragePermissionEnabled() {
+
+        setAdapter();
+
+        startScreenCapture();
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void onWriteStoragePermissionDisabled() {
+
+
+        finish();
+    }
+
+
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        EventBus.getDefault().register(this);
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        EventBus.getDefault().unregister(this);
+//    }
+//
+//    @Subscribe
+//    public void onAccessibilityServiceEnabled(AccessbilityCheckEvent event) {
+//        /* Do something */
+//
+//        if(event != null){
+//
+//            if(event.getStatus() == Constants.RESULT_CODE.SUCCESS){
+//
+//
+//            }
+//        }
+//    };
+
+
+
+
+
+
 }

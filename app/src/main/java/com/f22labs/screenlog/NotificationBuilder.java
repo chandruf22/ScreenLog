@@ -98,6 +98,12 @@ public class NotificationBuilder {
         return this;
     }
 
+    public NotificationBuilder setOpenAppIntent(PendingIntent openAppPendingIntent){
+        mBuilder.setContentIntent(openAppPendingIntent);
+        return this;
+    }
+
+
     public Notification build() {
         Notification notification = mBuilder.build();
         return notification;

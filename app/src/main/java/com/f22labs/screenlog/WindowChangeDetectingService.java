@@ -16,8 +16,11 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.RemoteViews;
 
+import com.f22labs.screenlog.models.AccessbilityCheckEvent;
 import com.f22labs.screenlog.utils.Constants;
 import com.f22labs.screenlog.utils.Utils;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class WindowChangeDetectingService extends AccessibilityService {
 
@@ -41,6 +44,9 @@ public class WindowChangeDetectingService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+
+
+//        EventBus.getDefault().postSticky(new AccessbilityCheckEvent(Constants.RESULT_CODE.SUCCESS));
 
         //Configure these here for compatibility with API 13 and below.
         AccessibilityServiceInfo config = new AccessibilityServiceInfo();
@@ -101,6 +107,10 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 //        PendingIntent bannerSingleTypeAction = RichMediaBuilder.getPendingIntent(this, Constants.ACTION.CALL_TO_ACTION_BANNER_TYPE, RichMediaNotificationService.class);
 
+        PendingIntent openAppIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, MainActivity.class), 0);
+
+
 
 
         remoteViewsCollapse.setImageViewBitmap(R.id.img_noti_icon_small, Utils.getIconFromPackageName(this,packageName));
@@ -111,20 +121,29 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
 //        remoteViewsExpand.setOnClickPendingIntent(R.id.txt_action_button, bannerSingleTypeAction);
 
+        if (resultCode == Constants.RESULT_CODE.RESULT_OK && resultData != null) {
 
-        Intent screenshotIntent = new Intent(this, ScreenshotService.class);
-        screenshotIntent.putExtra(Constants.INTENT_KEY.SCREENSHOT, resultCode);
-        screenshotIntent.putExtra(Constants.INTENT_KEY.SCREENSHOT_DATA, resultData);
-        screenshotIntent.putExtra(Constants.INTENT_KEY.PACKAGE, packageName);
-        screenshotIntent.putExtra(Constants.INTENT_KEY.ACTIVITY_NAME, activityName);
+            Intent screenshotIntent = new Intent(this, ScreenshotService.class);
+            screenshotIntent.putExtra(Constants.INTENT_KEY.SCREENSHOT, resultCode);
+            screenshotIntent.putExtra(Constants.INTENT_KEY.SCREENSHOT_DATA, resultData);
+            screenshotIntent.putExtra(Constants.INTENT_KEY.PACKAGE, packageName);
+            screenshotIntent.putExtra(Constants.INTENT_KEY.ACTIVITY_NAME, activityName);
 
 
-        screenshotIntent.setData(Uri.parse(screenshotIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            screenshotIntent.setData(Uri.parse(screenshotIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
-        PendingIntent screenshotPendingIntent = PendingIntent.getService(this, 0,
-                screenshotIntent, 0);
+            PendingIntent screenshotPendingIntent = PendingIntent.getService(this, 0,
+                    screenshotIntent, 0);
 
-        remoteViewsExpand.setOnClickPendingIntent(R.id.img_screen_capture, screenshotPendingIntent);
+            remoteViewsExpand.setOnClickPendingIntent(R.id.img_screen_capture, screenshotPendingIntent);
+
+        }else{
+
+            remoteViewsExpand.setOnClickPendingIntent(R.id.img_screen_capture, openAppIntent);
+
+
+        }
+
 
         remoteViewsCollapse.setTextViewText(R.id.txt_noti_title, Utils.getAppNameFromPackage(this,packageName));
         remoteViewsCollapse.setTextViewText(R.id.txt_noti_activity_name, activityName);
@@ -135,6 +154,7 @@ public class WindowChangeDetectingService extends AccessibilityService {
 
         NotificationBuilder.with().initCustomLayout(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setOpenAppIntent(openAppIntent)
                 .buildCollapseExpandLayout(remoteViewsCollapse, remoteViewsExpand, 1, true);
 
 

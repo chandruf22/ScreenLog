@@ -27,17 +27,25 @@ public class Constants {
 
     public interface RESULT_CODE {
 
+        int RESULT_OK = -1;
 
-        int SCREENSHOT = 0;
+        int RESULT_CANCELED = 0;
+
+
 
         int SUCCESS = 1;
 
 
         int FAILURE = 2;
 
+        int SCREENSHOT = 3;
+
+
+        int ACCESSIBILITY_SERVICE = 4;
 
 
     }
+
 
 
     public interface FILE {

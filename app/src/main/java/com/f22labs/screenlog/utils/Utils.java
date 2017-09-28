@@ -7,7 +7,6 @@ package com.f22labs.screenlog.utils;
 
 
 
-import android.Manifest;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -18,46 +17,29 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.os.StatFs;
-import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
 import com.f22labs.screenlog.R;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.util.List;
@@ -322,10 +304,10 @@ import static android.content.Context.CLIPBOARD_SERVICE;
         }
 
 
-        public static void openAccessibilitySettings(Context context){
+        public static void openAccessibilitySettings(Activity activity, int requestCode){
 
             Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
-            context.startActivity(intent);
+            activity.startActivityForResult(intent, requestCode);
         }
 
 
