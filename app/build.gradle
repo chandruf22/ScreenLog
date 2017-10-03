@@ -39,6 +39,22 @@ dependencies {
 
     compile 'org.greenrobot:eventbus:3.0.0'
 
-    compile('com.github.hotchemi:permissionsdispatcher:2.4.0') { exclude module: 'support-v13' }
+    compile('com.github.hotchemi:permissionsdispatcher:2.4.0') {
+        exclude module: 'support-v13'
+    }
+
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
+
+    compile 'com.meetic.dragueur:dragueur:1.0.2'
+
+    compile 'com.f2prateek.dart:dart:2.0.2'
+    annotationProcessor 'com.f2prateek.dart:dart-processor:2.0.2'
+
+    compile 'com.f2prateek.dart:henson:2.0.2'
+    annotationProcessor 'com.f2prateek.dart:henson-processor:2.0.2'
+
+
+
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
 }

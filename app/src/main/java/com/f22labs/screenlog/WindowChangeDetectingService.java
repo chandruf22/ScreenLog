@@ -16,11 +16,9 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.RemoteViews;
 
-import com.f22labs.screenlog.models.AccessbilityCheckEvent;
+import com.f22labs.screenlog.activities.MainActivity;
 import com.f22labs.screenlog.utils.Constants;
 import com.f22labs.screenlog.utils.Utils;
-
-import org.greenrobot.eventbus.EventBus;
 
 public class WindowChangeDetectingService extends AccessibilityService {
 

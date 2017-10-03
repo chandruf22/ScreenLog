@@ -1,4 +1,4 @@
-package com.f22labs.screenlog;
+package com.f22labs.screenlog.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -15,14 +15,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.f22labs.screenlog.models.AccessbilityCheckEvent;
+import com.f22labs.screenlog.R;
+import com.f22labs.screenlog.RecyclerViewAdapter;
+import com.f22labs.screenlog.WindowChangeDetectingService;
 import com.f22labs.screenlog.storage.Storage;
 import com.f22labs.screenlog.utils.Constants;
 import com.f22labs.screenlog.utils.SharedPrefsUtils;
 import com.f22labs.screenlog.utils.Utils;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.List;
@@ -207,6 +206,14 @@ public class MainActivity extends AppCompatActivity {
 //                    Toast.makeText(MainActivity.this, "Hey " + model.getTitle(), Toast.LENGTH_SHORT).show();
 
 
+
+                    Intent intent = Henson.with(MainActivity.this)
+                            .gotoImageEditActivity()
+                            .imageAbsolutePath(model.getAbsolutePath())
+                            .build();
+
+                    startActivity(intent);
+
                 }
             });
 
@@ -236,10 +243,7 @@ public class MainActivity extends AppCompatActivity {
     void onWriteStoragePermissionEnabled() {
 
         setAdapter();
-
         startScreenCapture();
-
-
     }
 
     @Override
@@ -250,8 +254,6 @@ public class MainActivity extends AppCompatActivity {
 
     @OnPermissionDenied({Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
     void onWriteStoragePermissionDisabled() {
-
-
         finish();
     }
 
@@ -280,10 +282,5 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 //    };
-
-
-
-
-
 
 }
