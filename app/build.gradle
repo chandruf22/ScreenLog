@@ -45,7 +45,6 @@ dependencies {
 
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
 
-    compile 'com.meetic.dragueur:dragueur:1.0.2'
 
     compile 'com.f2prateek.dart:dart:2.0.2'
     annotationProcessor 'com.f2prateek.dart:dart-processor:2.0.2'
@@ -57,4 +56,8 @@ dependencies {
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.jakewharton:butterknife:8.8.1'
+
+
+    compile 'com.flying.xiaopo:sticker:1.6.0'
+
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:id="@+id/constraint_lyt"
     tools:context="com.f22labs.screenlog.activities.ImageEditActivity">
 
 
@@ -18,8 +18,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <FrameLayout
-        android:id="@+id/frame_view"
+    <com.xiaopo.flying.sticker.StickerView
+        android:id="@+id/sticker_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
